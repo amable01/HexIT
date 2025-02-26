@@ -4,6 +4,9 @@ from fastapi import FastAPI, HTTPException
 from src.flow.graph import init_graph  # Import the graph initialization
 from src.models.servicenow_api import APIResponse  # Import the APIResponse model
 
+# Define the FastAPI app here
+app = FastAPI()
+
 # Global variable to hold the graph (will be initialized on startup)
 graph = None
 
@@ -44,8 +47,4 @@ async def execute_flow(task_data: APIResponse):
     except Exception as e:
         logging.error(f"Error executing flow: {e}")
         raise HTTPException(status_code=500, detail=str(e))
-
-# Function to attach the app (used in main.py)
-def setup_api(app: FastAPI):
-    # No additional routing needed since endpoints are defined directly on the app
-    pass
+    
