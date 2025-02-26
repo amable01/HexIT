@@ -20,7 +20,7 @@ async def initialize_flow_state(state: FlowState) -> FlowState:
  
     # --- Load from YAML ---
     try:
-        with open("config\flow_details.yml", "r", encoding="utf-8") as f:
+        with open("config/flow_details.yml", "r", encoding="utf-8") as f:
             yaml_data = yaml.safe_load(f)
             flow_map = {
                 item["short_description"]: {
