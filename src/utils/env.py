@@ -1,12 +1,12 @@
 # src/utils/env.py
-import os
-from dotenv import load_dotenv
+# import os
+# from dotenv import load_dotenv
 
-# Load environment variables
-load_dotenv()
+# # Load environment variables
+# load_dotenv()
 
 # Export environment variables
-user = os.getenv('SERVICENOW_USER')
-pwd = os.getenv('SERVICENOW_PWD')
+user = "pankajj@hexaware.com"
+pwd = "Pankaj@123"
 endpoint = "https://hexawaretechnologiesincdemo8.service-now.com"
-db_path = os.getenv('DATABASE_PATH')
+db_path = "state_db/stateMemory.sqlite"
