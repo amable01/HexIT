@@ -1,4 +1,3 @@
-
 # src/services/script_executor.py
 import os
 import json
@@ -47,8 +46,28 @@ async def run_script(script_path: str, inputs: dict, task_response: dict) -> dic
                 try:
                     subprocess.run([sys.executable, "-m", "venv", venv_dir], check=True)
                     logging.info(f"Created virtual environment at {venv_dir}")
+
+                    # Install requirements.txt if it exists
+                    requirements_path = os.path.join(script_dir, 'requirements.txt')
+                    if os.path.exists(requirements_path):
+                        pip_executable = os.path.join(venv_dir, 'Scripts', 'pip.exe')
+                        logging.info(f"Installing dependencies from {requirements_path}")
+                        result = subprocess.run(
+                            [pip_executable, "install", "-r", requirements_path],
+                            capture_output=True,
+                            text=True,
+                            check=True
+                        )
+                        if result.returncode == 0:
+                            logging.info("Dependencies installed successfully")
+                        else:
+                            logging.error(f"Failed to install dependencies: {result.stderr}")
+                            return {"Status": "Error", "OutputMessage": {}, "ErrorMessage": f"Failed to install dependencies: {result.stderr}"}
+                    else:
+                        logging.info(f"No requirements.txt found at {script_dir}, skipping dependency installation")
+
                 except subprocess.CalledProcessError as e:
-                    error_msg = f"Failed to create virtual environment at {venv_dir}: {e}"
+                    error_msg = f"Failed to create virtual environment or install dependencies at {venv_dir}: {e}"
                     logging.error(error_msg)
                     return {"Status": "Error", "OutputMessage": {}, "ErrorMessage": error_msg}
 
