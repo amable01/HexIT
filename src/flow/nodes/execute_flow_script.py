@@ -8,7 +8,7 @@ from src.services.script_executor import run_script
 async def execute_flow_script(state: FlowState) -> FlowState:
     """
     Executes the current script in the workflow and updates the FlowState accordingly.
-    Only executes .ps1, .py, and .js files.
+    Only executes .ps1, .py, and .js files; skips others silently.
     """
     logging.debug("Executing current action.")
     
@@ -24,15 +24,9 @@ async def execute_flow_script(state: FlowState) -> FlowState:
     
     allowed_extensions = ('.ps1', '.py', '.js')
     
+    # Skip non-script files silently
     if not action_path.lower().endswith(allowed_extensions):
-        logging.warning(f"Skipping {action_name}: Unsupported file type")
-        state["execution_log"].append({
-            "script": action_name,
-            "Status": "Skipped",
-            "OutputMessage": "Unsupported file type - only .ps1, .py, and .js are allowed",
-            "ErrorMessage": ""
-        })
-        state["worknote_content"] = f"Skipped {action_name}: Unsupported file type"
+        logging.debug(f"Skipping {action_name}: Not a script file")
         state["action_index"] = idx + 1
         return state
     
